@@ -8,17 +8,8 @@ const useForm = (callback, validate) => {
     });
 
     // define state for errors
-    const [errors, setErrors] = React.useState({
-        name: "",
-        email: ""
-    });
-
-    // functions that validate these errors
-
-
-    // pass these errors back to forms
-
-
+    const [errors, setErrors] = React.useState({});
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     const handleFormChange = event => {
         const { name, value } = event.target;
@@ -28,10 +19,17 @@ const useForm = (callback, validate) => {
     const handleFormSubmit = (event) => {
         event.preventDefault();
         setErrors(validate(fields));
-
-
-        callback();
+        setIsSubmitting(true);
     };
+
+    /* place the callback function here so that the form only submits when
+    there is no object in errors and passed handleFormSubmit. */
+    React.useEffect(() => {
+        // check to see if there are no errors
+        if (Object.keys(errors).length === 0 && isSubmitting) {
+            callback();
+        };
+    })
 
     return { fields, handleFormChange, handleFormSubmit, errors }
 };
